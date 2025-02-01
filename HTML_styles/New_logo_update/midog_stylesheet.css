@@ -1,0 +1,435 @@
+/*General settings*/
+@page {
+  margin-left: 1cm;
+  margin-right: 1cm;
+  margin-top: 1cm;
+  margin-bottom: 0.5cm;
+}
+
+*{
+  font-family:Arial;
+}
+
+
+h2{
+  float: left;
+  width: 740px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+h3{
+  float: left;
+  width: 740px;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+h4{
+  float: left;
+  width: 740px;
+  margin-bottom: 0px;
+  margin-top: 5px;
+  font-size: 10px;
+}
+
+p{
+  float: left;
+  width: 740px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  font-size: 11px;
+}
+
+p.blank{
+  float: left;
+  width: 740px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 5px;
+}
+
+/*Page 1*/
+
+/*Page 1 header*/
+table.page1header{
+  border-collapse: collapse;
+  table-layout: fixed;
+  border-bottom: 1px solid grey;
+  width: 740px
+  border: 1px solid white;
+}
+#logo {
+  width: 150px;
+  height: 60px;
+  float: left;
+  mix-blend-mode: multiply;
+}
+
+#vdi_logo {
+  width: 120px;
+  height: 70px;
+  float: left;
+  mix-blend-mode: multiply;
+}
+
+#title{
+  font-size: 28px;
+  height: 80px;
+  width: 475px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#pagenum{
+  font-size: 10px;
+  height: 30px;
+  width: 100px;
+  text-align: right;
+  vertical-align: center;
+}
+
+
+/*page1 sample information table*/
+table.sampleinfo{
+  border-collapse: collapse;
+  table-layout: fixed;
+  border-bottom: 1px solid grey;
+}
+
+
+td.Name{
+  white-space: nowrap;
+  height: 16px;
+  width: 90px;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: left;
+  overflow: hidden;
+}
+
+td.Value{
+  white-space: nowrap;
+  height: 16px;
+  width: 120px;
+  font-size: 10px;
+  text-align: left;
+  overflow: hidden;
+}
+
+td.Value2{
+  white-space: nowrap;
+  height: 16px;
+  width: 220px;
+  font-size: 10px;
+  text-align: left;
+  overflow: hidden;
+}
+
+
+/*page1 pathogen table*/
+table.abuntable{
+  border-collapse: collapse;
+  table-layout: fixed;
+  border: 1px solid black;
+  width: 740px
+}
+
+th.species{
+  white-space: nowrap;
+  height: 18px;
+  width: 240px;
+  font-size: 12px;
+  text-align: left;
+  overflow: hidden;
+  border: 1px solid black;
+}
+td.species{
+  white-space: nowrap;
+  height: 18px;
+  width: 240px;
+  font-size: 12px;
+  text-align: left;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+th.abun{
+  white-space: nowrap;
+  height: 18px;
+  width: 90px;
+  font-size: 12px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+td.abun{
+  white-space: nowrap;
+  height: 17px;
+  width: 90px;
+  font-size: 12px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+.reddot {
+  height: 10px;
+  width: 10px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.greendot {
+  height: 10px;
+  width: 10px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.greydot {
+  height: 10px;
+  width: 10px;
+  background-color: grey;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+
+/*page1 overview figures*/
+table.overview{
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 740px;
+}
+
+td.overview {
+  width: 220px;
+  text-align: center;
+  overflow: hidden;
+  font-size: 11px;
+  border: 1px dashed grey;
+}
+
+img.donut {
+  height: 140px;
+  overflow: hidden;
+}
+
+p.note{
+  font-size: 10px;
+}
+
+/*page2*/
+/*page2 header*/
+table.pageheader{
+  border-collapse: collapse;
+  table-layout: fixed;
+  border-bottom: 1px solid grey;
+  width: 740px;
+  page-break-before: always;
+}
+
+#logo2 {
+  width: 75px;
+  height: 30px;
+  float: left;
+}
+
+td.header1{
+  white-space: nowrap;
+  height: 15px;
+  width: 70px;
+  font-size: 10px;
+  text-align: left;
+  vertical-align: center;
+  overflow: hidden;
+}
+
+td.header2{
+  white-space: nowrap;
+  height: 15px;
+  width: 130px;
+  font-size: 10px;
+  text-align: left;
+  overflow: hidden;
+  vertical-align: center;
+}
+
+
+/*page2 AMR table*/
+
+table.AMRtable{
+  border-collapse: collapse;
+  table-layout: fixed;
+  border: 1px solid black;
+  width: 740px;
+}
+
+th.AMRheader{
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+th.AMRheader p{
+  font-size: 9px;
+  width: 100%;
+  text-align: center;
+}
+
+td.good{
+  white-space: nowrap;
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+  background-color:#228b22;
+}
+
+td.fair{
+  white-space: nowrap;
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+  background-color:#90ee90;
+}
+
+td.poor{
+  white-space: nowrap;
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+  background-color:#ffff00;
+}
+td.resistant{
+  white-space: nowrap;
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+  background-color:#f08080;
+}
+td.usage{
+  white-space: nowrap;
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+td.none{
+  white-space: nowrap;
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+td.drug{
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+td.tier{
+  white-space: nowrap;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+
+/*page2 AMR key table*/
+table.AMRkeytable{
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 740px;
+}
+
+td.keyexplain{
+  height: 10px;
+  font-size: 9px;
+  text-align: left;
+  overflow: hidden;
+}
+
+td.deliverykey{
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+/*page2 AMR footnote table*/
+table.AMRfootnote{
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 740px;
+}
+td.footnotekey{
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid black;
+}
+td.footnoteblank{
+  height: 10px;
+  font-size: 9px;
+  text-align: center;
+  overflow: hidden;
+}
+ol{
+  float: left;
+}
+div.ref{
+  width: 740px;
+  font-size: 10px;
+}
+
+/*page2 AMR table*/
+
+table.AMRgenetable{
+  border-collapse: collapse;
+  table-layout: fixed;
+  border: 1px solid black;
+  width: 740px;
+}
+
+th.AMRgeneheader{
+  font-size: 9px;
+  text-align: left;
+  overflow: hidden;
+  border: 1px solid black;
+}
+
+
+td.gene{
+  height: 10px;
+  font-size: 9px;
+  text-align: left;
+  border: 1px solid black;
+}
+
+img.div_plot {
+  width: 740px;
+  height: 148px;
+  overflow: hidden;
+}
+

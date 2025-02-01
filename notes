@@ -1,0 +1,67 @@
+https://rdrr.io/cran/lessR/man/PieChart.html
+
+https://r-charts.com/part-whole/donut-chart/
+
+
+x <- c("ACCT", "ADMN", "FINC", "MKTG", "SALE")
+y <- c(5, 6, 4, 6, 15)
+d <- data.frame(x,y)
+names(d) <- c("Dept", "Count")
+PieChart(Dept, Count)
+
+
+
+Use perl loops to write HTML table
+
+https://stackoverflow.com/questions/200140/how-do-i-convert-csv-into-an-html-table-using-perl
+
+while ($line=<F>)
+{  
+    print "<tr>";
+    my @cells= split ',',$line;
+    foreach my $cell (@cells)
+    {
+       print "<td>$cell</td>";
+    }
+    print "</tr>";
+}
+
+how to merge rows:
+https://www.computerhope.com/issues/ch001655.htm
+
+<table>
+ <tr>
+  <td rowspan="2">&nbsp;</td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+ </tr>
+ <tr>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+ </tr>
+ <tr>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+  <td>&nbsp;</td>
+ </tr>
+</table>
+
+
+
+# Text::CSV
+You need to remove /r from windows-derived csv files before processing.
+$line =~ s/\r//g;
+
+
+
+Page breaks:
+<div style="page-break-before:always;">
+    <p>YOUR CONTENT 1</p>
+</div>
+
+
+####
+https://stackoverflow.com/questions/34479040/how-to-install-wkhtmltopdf-with-patched-qt
+
+xvfb-run -a wkhtmltopdf --disable-smart-shrinking --page-size letter --dpi 600 --margin-bottom 0.8cm --margin-left 0.8cm --margin-right 0.8cm --margin-top 0.8cm MI19103838_report_debug.html MI19103838_report_debug.pdf
+

@@ -1,0 +1,3 @@
+-i 3.statistics_analyses/all.abs.abun.tsv.full -s MI50041957 -o 4.healthy_ranges -k bacteria
+-i 3.statistics_analyses/all.abs.abun.tsv.full -s MI50041957 -o 4.healthy_ranges -k bacteria
+-i 3.statistics_analyses/all.abs.abun.tsv.full -s MI50041957 -o 4.healthy_ranges -k fungi

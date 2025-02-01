@@ -1,0 +1,77 @@
+AMR Genes	Name	Drug Class	Function
+aac3Ia	AAC(3)-Ia	aminoglycoside	aminoglycoside acetyltransferase
+aac6Ie	AAC(6')-Ie-APH(2'')-Ia	aminoglycoside	aminoglycoside acetyltransferase
+ant4Ib	ANT(4')-Ib	aminoglycoside	Kanamycin nucleotidyltransferase
+aph3Ia	APH(3')-Ia	aminoglycoside	aminoglycoside phosphotransferase
+aph3IIIa	APH(3')-IIIa	aminoglycoside	aminoglycoside phosphotransferase
+aph6Id	APH(6)-Id	aminoglycoside	aminoglycoside phosphotransferase
+aph33Ib	APH(3'')-Ib	aminoglycoside	aminoglycoside phosphotransferase
+aac3IIa	AAC(3)-IIa	aminoglycoside	aminoglycoside acetyltransferase
+ant6Ia	ANT(6)-Ia	aminoglycoside	aminoglycoside nucleotidyltransferase
+aadA	aadA	aminoglycoside	aminoglycoside nucleotidyltransferase
+aac6IId	AAC(3)-IIb	aminoglycoside	aminoglycoside acetyltransferase
+ant2Ia	ANT(2'')-Ia	aminoglycoside	aminoglycoside nucleotidyltransferase
+aac6Ib	AAC(6')-Ib	aminoglycoside	aminoglycoside acetyltransferase
+aac3IIb	AAC(3)-IIb	aminoglycoside	aminoglycoside acetyltransferase
+aac3IV	AAC(3)-IV	aminoglycoside	aminoglycoside acetyltransferase
+aac3IId	AAC(3)-IId	aminoglycoside	aminoglycoside acetyltransferase
+aph3VIa	APH(3')-VIa	aminoglycoside	aminoglycoside phosphotransferase
+aac3Ia	AAC(3)-Ia	aminoglycoside	aminoglycoside acetyltransferase
+cmx	cmx	phenicol	chloramphenicol exporter 
+cat	cat	phenicol	chloramphenicol acetyltransferase
+msrA	msrA	streptogramin, tetracycline,phenicol, macrolide, lincosamide	ABC-F ribosomal protection protein
+msrD	msrD	streptogramin, tetracycline,phenicol, macrolide, lincosamide	ABC-F ribosomal protection protein
+CMY	CMY	cephamycin	class C beta-lactamases
+FOX	FOX	cephalosporin, cephamycin	class C beta-lactamases
+NDM	NDM	carbapenem, cephalosporin, cephamycin, penam	class B beta-lactamase
+VIM	VIM	carbapenem, cephalosporin, cephamycin, penam, penem	class B beta-lactamase
+KPC	KPC	monobactam, carbapenem, cephalosporin, penam	class A beta-lactamase
+mecA	mecA	monobactam, carbapenem, cephalosporin, cephamycin, penam, penem	penicillin-binding protein 2a
+IMP	IMP	carbapenem, cephalosporin, cephamycin, penam, penem	Metallo-beta-lactamases
+GIM	GIM	monobactam, carbapenem, cephalosporin, cephamycin, penam, penem	class B beta-lactamase
+ermB	ermB	streptogramin, macrolide, lincosamide	ribosomal methylase
+ermA	ermA	lincosamide, macrolide, streptogramin	23S rRNA methyltransferase
+ermC	ermC	streptogramin, macrolide, lincosamide	23S rRNA methyltransferase
+lnuA	lnuA	lincosamide	lincosamide nucleotidyltransferase
+ermX	ermX	streptogramin, macrolide, lincosamide	ribosomal RNA methyltransferase
+mphA	mphA	macrolide	macrolide 2'-phosphotransferase
+mphC	mphC	macrolide	macrolide phosphotransferase
+mphD	mphD	macrolide	macrolide phosphotransferase
+mcr1	Mcr-1	peptide	the mobilized colistin resistance gene
+mupA	mupA	mupirocin	alternative isoleucyl-tRNA synthetase
+OXA1	OXA-1	penam, cephalosporin, carbapenem	class D beta-lactamase
+OXA2	OXA-2	penam, cephalosporin, carbapenem	class D beta-lactamase
+OXA9	OXA-9	penam, cephalosporin, carbapenem	class D beta-lactamase
+OXA23	OXA-23	penam, cephalosporin, carbapenem	class D beta-lactamase
+OXA48	OXA-48	carbapenem, penam, cephalosporin	class D beta-lactamase
+VEB	VEB	monobactam, cephalosporin	class A beta-lactamase
+GES	GES	carbapenem, cephalosporin, penam	class A beta-lactamase
+SHV	SHV	carbapenem, cephalosporin, penam	class A beta-lactamase
+CTXM1	CTX-M-1	cephalosporin	class A beta-lactamase
+CTXM2	CTX-M-2	cephalosporin	class A beta-lactamase
+CTXM8	CTX-M-8	cephalosporin	class A beta-lactamase
+CTXM9	CTX-M-9	cephalosporin	class A beta-lactamase
+TEM	TEM	penam, monobactam, cephalosporin, penem	class A beta-lactamase
+PER	PER	monobactam, carbapenem, cephalosporin, penam, penem	class A beta-lactamase
+OXA10	OXA-10	penam, cephalosporin, carbapenem	class D beta-lactamase
+DHA	DHA	cephalosporin, cephamycin	class C beta-lactamase
+blaZ	blaZ	penam	class A beta-lactamase
+qnrA	qnrA	fluoroquinolone	quinolone resistance gene
+qnrS	qnrS	fluoroquinolone	quinolone resistance gene
+qnrB	qnrB	fluoroquinolone	quinolone resistance gene
+gyrA	gyrA	fluoroquinolone	DNA gyrase, subunit A
+parC	parC	fluoroquinolone	DNA topoisomerase IV, subunit A
+rpoB	rpoB	rifamycin	RNA polymerase, subunit beta
+sul1	sul1	sulfonamide	dihydropteroate synthase
+sul2	sul2	sulfonamide	dihydropteroate synthase
+tetA	tetA	tetracycline	tetracycline efflux pump
+tetB	tetB	tetracycline	tetracycline efflux pump
+tetD	tetD	tetracycline	tetracycline efflux pump
+tetC	tetC	tetracycline	tetracycline efflux pump
+tetO	tetO	tetracycline	ribosomal protection protein
+tetL	tetL	tetracycline	tetracycline efflux pump
+tetK	tetK	tetracycline	tetracycline efflux pump
+tetWNW	tetWNW	tetracycline	 ribosomal protection protein
+vanA	vanA	glycopeptide	Vancomycin resistance protein
+vanB	vanB	glycopeptide	Vancomycin resistance protein
+spm	spm	carbapenem	class B beta-lactamase 

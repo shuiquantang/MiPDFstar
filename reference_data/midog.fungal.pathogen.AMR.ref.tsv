@@ -1,0 +1,9 @@
+Antifungals	Drug Class	Suggested Dose	Drug Delivery	Lichtheimia corymbifera	Aspergillus fumigatus	Aspergillus terreus	Candida auris	Pichia kudriavzevii	Cryptococcus gattii	Cryptococcus neoformans	Cunninghamella bertholletiae	Cutaneotrichosporon curvatus	Exophiala dermatitidis	Fusarium oxysporum	Fusarium proliferatum	Fusarium verticillioides	Fusarium solani	Lomentospora prolificans	Malassezia pachydermatis	Mucor circinelloides	Naganishia albida	Byssochlamys spectabilis	Purpureocillium lilacinum	Rhizopus oryzae	Rhizomucor pusillus	Rhizopus microsporus	Rhodotorula glutinis	Rhodotorula mucilaginosa	Syncephalastrum racemosum	Trichosporon asahii
+Fluconazole	Triazole	5-10mg/kg, q 24 hrs	PO,IV	I	I	NA	I	I	NA	NA	I	I	NA	I	I	I	I	NA	NA	I	NA	NA	NA	I	I	NA	I	I	I	NA
+Itraconazole	Triazole	5-10mg/kg, q 24hrs	PO	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	I	I	I	I	I	NA	NA	NA	NA	NA	NA	NA	NA	I	I	NA	I
+Voriconazole	Triazole	10mg/kg, 12hrs	PO	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	I	NA	NA	NA	I	I	I	NA	NA
+Caspofungin	Echinocandin	1mg/kg, q 24hrs	PO	I	NA	NA	NA	NA	I	I	I	NA	I	I	I	I	I	I	I	I	NA	NA	NA	I	I	I	I	I	I	I
+Micafungin	Echinocandin	1mg/kg, q 24hrs	PO	I	NA	NA	NA	NA	I	I	I	NA	NA	I	I	I	I	NA	I	I	NA	NA	NA	I	I	NA	I	I	I	I
+Anidualfungin	Echinocandin	1mg/kg, q 24hrs	PO	NA	NA	NA	NA	NA	NA	I	NA	I	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	I	NA	I
+Amphotericin B	Polyene	0.5-1mg/kg, q 48 hrs 	IV	NA	NA	I	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	I	NA	NA	NA	NA	I	NA	NA	NA	NA	NA	NA	NA
+Flucytosine	Fluoropyrimidine	25-50 mg/kg, q 6-8hrs	PO	I	NA	NA	NA	NA	NA	NA	I	NA	NA	NA	NA	NA	NA	NA	NA	I	I	NA	NA	I	I	NA	NA	NA	I	I

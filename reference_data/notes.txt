@@ -1,0 +1,28 @@
+1. perl convert_sp_name.pl -i skin_health_status_reference_range.csv -o skin.csv
+
+2. convert 16S copy number and ITS copy number to cell numbers based on rrna database.
+
+3. The pathogen reference table prepared by Janina was coded by windows 1252. First, we need to convert it to UTF-8.
+
+iconv -f WINDOWS-1252 -t UTF-8 filename.txt> new_file.txt
+
+
+
+#################################
+The exotic list contains all pathogens in the non-exotic list plus some genera that are only be considered pathogens in the exotic animals.
+
+
+
+################################
+AMR distribution in different species are determined by blast AMR genes against selected genomes from NCBI for all species (with >= 5 genomes).
+
+details can be found at debug/midog.abs/AMR_genome_distribution.
+concatenated NCBI genomes are saved at: s3://zymo-files/WGS_Pipeline/shotgun_database/AMR_species_distribution_database/concat.seqs/
+
+
+################################
+open the pathogen table in "Western language(Apple machintoch)"
+
+
+################################
+In the AMR_recommendation_table, A genus should be shown as "Pseudomonas" rather than "Pseudomonas sp."
