@@ -13,19 +13,19 @@ sub create_donut_plots{
     # python donut_plot.py -i inputs/domain.tsv -o domain_plot.svg -t "Bactera vs Fungi"
     my $domain_file = "$input_dir/$sample_id/domain_abun.tsv";
     if (-e $domain_file && -s $domain_file) {
-	system("python3 $donut_plot_script -i $domain_file -o $tmp_dir/$sample_id/1.bac_vs_fungi.png -t \"Bacteria vs Fungi\" -s 0");
+	system("python3 $donut_plot_script -i $domain_file -o $tmp_dir/$sample_id/1.prok_vs_euk.png -t \"Bacteria vs Eukaryota\" -s 0");
     }
     
-    my $bac_file = "$input_dir/$sample_id/1.bac_perc.tsv";
+    my $bac_file = "$input_dir/$sample_id/1.prok_perc.tsv";
     if (-e $bac_file && -s $bac_file) {
-	system("python3 $donut_plot_script -i $bac_file -o $tmp_dir/$sample_id/2.bac_abun.png -t Bacteria -s 1");
-	system("python3 $donut_plot_script -i $bac_file -o $tmp_dir/$sample_id/2.bac_abun_2.png -t \"Your Sample\" -s 1");
+	system("python3 $donut_plot_script -i $bac_file -o $tmp_dir/$sample_id/2.prok_abun.png -t \"Bacteria & Archaea\" -s 1");
+	system("python3 $donut_plot_script -i $bac_file -o $tmp_dir/$sample_id/2.prok_abun_2.png -t \"Your Sample\" -s 1");
     }
     
-    my $fungi_file = "$input_dir/$sample_id/2.fungi_perc.tsv";
+    my $fungi_file = "$input_dir/$sample_id/2.euk_perc.tsv";
     if (-e $fungi_file && -s $fungi_file) {
-	system("python3 $donut_plot_script -i $fungi_file -o $tmp_dir/$sample_id/3.fungi_abun.png -t Fungi -s 1");
-	system("python3 $donut_plot_script -i $fungi_file -o $tmp_dir/$sample_id/3.fungi_abun_2.png -t \"Your Sample\" -s 1");
+	system("python3 $donut_plot_script -i $fungi_file -o $tmp_dir/$sample_id/3.euk_abun.png -t Eukaryota -s 1");
+	system("python3 $donut_plot_script -i $fungi_file -o $tmp_dir/$sample_id/3.euk_abun_2.png -t \"Your Sample\" -s 1");
     }
     
 }
@@ -45,9 +45,13 @@ sub create_AMR_tables{
     my %AMR_ref;
     my ($midog_drug_list, $header) = Inputs::read_tsv_table($AMR_ref_table, \%AMR_ref);
     Inputs::enroll_eucast_data(\%AMR_ref, $eucast_file);
+    # read resistance table
     my %detected_drug_resistance;
-    Inputs::read_drug_resistance_table("$input_dir/$sample_id/4.drug.resistance.tsv", \%detected_drug_resistance);
+    Inputs::read_tsv_table("$input_dir/$sample_id/4.drug.resistance.tsv", \%detected_drug_resistance);
+    remove_abun_from_species_name(\%detected_drug_resistance);
+    # read species abundance table
     my $abun = Inputs::read_abun_table("$input_dir/$sample_id/$abun_table");
+    # create the antibiotics table
     my @all_species = sort{$abun->{$b} <=> $abun->{$a}}keys%{$abun};
     my @patho_list = sort{$pathogen_list->{$b} <=> $pathogen_list->{$a}} keys(%{$pathogen_list});
     my $output_file = "$tmp_dir/$sample_id/$pathogen_amr_table";
@@ -58,6 +62,18 @@ sub create_AMR_tables{
     $maximum_pathogens_to_show = 1000;
     merge_print_AMR(\@all_species, \%AMR_ref, \%detected_drug_resistance, $midog_drug_list, $header, $output_file, $maximum_pathogens_to_show);
     
+}
+
+sub remove_abun_from_species_name{
+    my $hash = shift;
+    foreach my $i (keys(%{$hash})){
+	foreach my $j (keys(%{$hash->{$i}})){
+	    my @name = split(/\(/, $j);
+	    my $sp = $name[0];
+	    $hash->{$i}->{$sp}=$hash->{$i}->{$j};
+	    delete($hash->{$i}->{$j});
+	}
+    }
 }
 
 
@@ -111,9 +127,12 @@ sub merge_print_AMR{
     foreach my $i (@{$midog_drug_list}){
 	foreach my $j (@header){
 	    if (exists($detected_drug_resistance->{$i}->{$j})) {
-		my @genes = @{$detected_drug_resistance->{$i}->{$j}};
-		my $gene_list = join(" | ", @genes);
-		$drug_info->{$i}->{$j}=$gene_list;
+		my $gene_list = $detected_drug_resistance->{$i}->{$j};
+		if (length($gene_list)>0) {
+		    $drug_info->{$i}->{$j}=$gene_list;
+		}
+		
+		
 	    }
 	    
 	}
@@ -148,23 +167,34 @@ sub create_abun_tables{
     my $amr_genes = shift;
     my $AID_url = shift;
     
-    my $abs_bac = Inputs::read_abun_table("$input_dir/$sample_id/1.bac_cells.tsv");
-    my $rel_bac = Inputs::read_abun_table("$input_dir/$sample_id/1.bac_perc.tsv");
+    my $abs_bac = Inputs::read_abun_table("$input_dir/$sample_id/1.prok_cells.tsv");
+    my $rel_bac = Inputs::read_abun_table("$input_dir/$sample_id/1.prok_perc.tsv");
     # buld bacterial pathogen table
-    my $bac_pathogen_table = "$tmp_dir/$sample_id/1.bac_pathogen_table.tsv"; #table 1
+    my $bac_pathogen_table = "$tmp_dir/$sample_id/1.prok_pathogen_table.tsv"; #table 1
     build_abun_table($abs_bac, $rel_bac, $ref_range, $bac_pathogen_table, 5, 0, $patient_info, $amr_genes, $AID_url, $pathogen_ref_info);
     # build bacteral abundance table
-    my $bac_table="$tmp_dir/$sample_id/3.bac_table.tsv"; #table 3
+    my $bac_table="$tmp_dir/$sample_id/3.prok_table.tsv"; #table 3
     build_abun_table($abs_bac,$rel_bac, $ref_range, $bac_table, 8, 0, $patient_info, $amr_genes, $AID_url);
     
-    my $abs_fungi = Inputs::read_abun_table("$input_dir/$sample_id/2.fungi_cells.tsv");
-    my $rel_fungi = Inputs::read_abun_table("$input_dir/$sample_id/2.fungi_perc.tsv");
+    my $abs_fungi = Inputs::read_abun_table("$input_dir/$sample_id/2.euk_cells.tsv");
+    my $rel_fungi = Inputs::read_abun_table("$input_dir/$sample_id/2.euk_perc.tsv");
     # buld fungi pathogen table
-    my $fungi_pathogen_table="$tmp_dir/$sample_id/2.fungi_pathogen_table.tsv"; #table 2
+    my $fungi_pathogen_table="$tmp_dir/$sample_id/2.euk_pathogen_table.tsv"; #table 2
     build_abun_table($abs_fungi,$rel_fungi, $ref_range, $fungi_pathogen_table, 5, 0, $patient_info, $amr_genes, $AID_url, $pathogen_ref_info);
     # build fungi abundance tabl
-    my $fungi_table="$tmp_dir/$sample_id/4.fungi_table.tsv"; #table 4
+    my $fungi_table="$tmp_dir/$sample_id/4.euk_table.tsv"; #table 4
     build_abun_table($abs_fungi,$rel_fungi, $ref_range, $fungi_table, 8, 0, $patient_info, $amr_genes, $AID_url);
+    
+    
+    # Build Virus abundance table
+    my %virus_abun;
+    my $virus_abun_file = "$input_dir/$sample_id/virus_abun.tsv";
+    Inputs::read_tsv_table($virus_abun_file,\%virus_abun);
+    my $virus_pathogen_table ="$tmp_dir/$sample_id/5.virus_pathogen_table.tsv"; #table 4
+    build_virus_abun_table($virus_pathogen_table, \%virus_abun, 5, 0, $patient_info, $AID_url, $pathogen_ref_info);
+    my $virus_table ="$tmp_dir/$sample_id/5.virus_table.tsv"; #table 4
+    build_virus_abun_table($virus_table, \%virus_abun, 8, 0, $patient_info, $AID_url);
+    
     
     #return bacteria pathogen relative abundance
     my $bac_pathogen_abun = pathogen_match($rel_bac, $pathogen_ref_info);
@@ -173,23 +203,46 @@ sub create_abun_tables{
     
 }
 
-sub pathogen_match{
-    my $sp2abun = shift;
-    my $pathogen_ref = shift;
-    my %patho2abun;
-    foreach my $i (keys(%{$sp2abun})){
-	my @sp = split(/\ |\-/, $i);
-	my $genus = shift(@sp);
-	foreach my $j (@sp){
-	    my $new_sp = $genus.' '.$j;
-	    if (exists($pathogen_ref->{$new_sp})) {
-		$patho2abun{$i}=$sp2abun->{$i};
-	    }elsif(exists($pathogen_ref->{$genus})){
-		$patho2abun{$i}=$sp2abun->{$i};
-	    }
+sub build_virus_abun_table{
+    my $output_file = $_[0];
+    my $virus_abun = $_[1];
+    my $maximum_species_to_show = $_[2];
+    my $minimum_abs = $_[3];
+    my $patient_info = $_[4];
+    my $AID_url = $_[5];
+    my $species = $patient_info->{'Species'};
+    my $sample_type = $patient_info->{'Sample Type'};
+    if (scalar(@_)==7) {
+	my $pathogen_ref_info = $_[6];
+	$virus_abun = pathogen_match($virus_abun, $pathogen_ref_info, $patient_info);
+    }
+    my @species_order = sort{$virus_abun->{$b}->{'mapped_reads'} <=> $virus_abun->{$a}->{'mapped_reads'}}keys(%{$virus_abun});
+    if (keys(@species_order)==0) { #empty tables
+	return();
+    }
+    
+    open(my $f1, ">$output_file") or die;
+    my @titles;
+    my $header='';
+    my @columns;
+    my $line='';
+    
+    my $counter = 0;
+    @titles = ('Species Detected', 'AID', 'Percentage (%)', 'read_counts');
+    $header = join(",", @titles);
+    print($f1 "$header\n");
+    foreach my $i (@species_order){
+        my $perc = $virus_abun->{$i}->{'DNA_abun_by_read_count(%)'};
+	$perc = sprintf("%.2f", $perc);
+	my $read_counts = $virus_abun->{$i}->{'mapped_reads'};
+	my $AID_tag = search_AID_records($AID_url, $i);
+	print($f1 "$i,$AID_tag,$perc,$read_counts\n");
+	$counter++;
+	if ($counter == $maximum_species_to_show) {
+	    last;
 	}
     }
-    return(\%patho2abun);
+    
 }
 
 sub build_abun_table{
@@ -209,8 +262,8 @@ sub build_abun_table{
     # if it is a pathogen table
     if (scalar(@_)==10) {
 	my $pathogen_ref_info = $_[9];
-	$abs = pathogen_match($abs, $pathogen_ref_info);
-	$rel = pathogen_match($rel, $pathogen_ref_info);
+	$abs = pathogen_match($abs, $pathogen_ref_info, $patient_info);
+	$rel = pathogen_match($rel, $pathogen_ref_info, $patient_info);
     }
     my @species_order = sort{$rel->{$b} <=> $rel->{$a}}keys(%{$rel});
     if (keys(@species_order)==0) { #empty tables
@@ -249,6 +302,15 @@ sub build_abun_table{
 	    
 	    if (exists($ref_range->{$key})) {
 		$C1 = $ref_range->{$key}->{'C1'};
+		if ($C1>=10) {
+		    $C1 = sprintf("%.0f", $C1);
+		}elsif($C1>=1){
+		    $C1 = sprintf("%.1f", $C1);
+		}else{
+		    $C1 = sprintf("%.2f", $C1);
+		}
+		
+		
 		$C2 = $ref_range->{$key}->{'C2'};
 	    }
 	    my $significance = '';
@@ -313,6 +375,42 @@ sub build_abun_table{
     
 }
 
+
+sub pathogen_match{
+    my $sp2abun = shift;
+    my $pathogen_ref = shift;
+    my $patient_info = shift;
+    my $current_host_type = 'exotic_only';
+    my $patient_species = lc($patient_info -> {'host'});
+    $patient_species =~ s/\s+//g;
+    my @nonexotic = ('canine', 'dog', 'feline', 'cat');
+    foreach my $i (@nonexotic){
+	if (lc($patient_species) eq $i) {
+	    $current_host_type = 'non-exotic_only';
+	}
+    }
+    my %patho2abun;
+    foreach my $i (keys(%{$sp2abun})){
+	my @sp = split(/\ |\-/, $i);
+	my $genus = shift(@sp);
+	foreach my $j (@sp){
+	    my $new_sp = $genus.' '.$j;
+	    if (exists($pathogen_ref->{$new_sp})) {
+	    }elsif(exists($pathogen_ref->{$genus})){
+		$new_sp = $genus;
+	    }else{
+		next;
+	    }
+	    my $host_type = $pathogen_ref->{$new_sp}->{'Host_type'};
+	    if ( $host_type eq 'all' || $host_type eq $current_host_type) {
+		$patho2abun{$i}=$sp2abun->{$i};
+	    }
+		
+	}
+    }
+    return(\%patho2abun);
+}
+
 sub assign_MRS_tag{
     my $sp = shift;
     my $amr_genes = shift;
@@ -334,7 +432,7 @@ sub assign_MRS_tag{
 sub get_reference_range{
     my $patient_info=shift;
     my $ref_dir = shift;
-    my $host_nomenclature_file = "$ref_dir/nomenclature_host_species.csv";
+    my $host_nomenclature_file = "$ref_dir/reference_ranges/nomenclature_host_species.csv";
     my $species = $patient_info->{'Species'};
     my $breed = $patient_info->{'Breed'};
     my $host = word_search($species, $host_nomenclature_file);
@@ -343,7 +441,7 @@ sub get_reference_range{
     }
     $patient_info->{'host'}=$host;
     
-    my $body_site_nomenclature_file = "$ref_dir/nomenclature_body_site.csv";
+    my $body_site_nomenclature_file = "$ref_dir/reference_ranges/nomenclature_body_site.csv";
     my $sample_type = $patient_info->{'Sample Type'};
     my $body_site = '';
     if (exists($patient_info->{'Body Site'})) {
@@ -358,7 +456,7 @@ sub get_reference_range{
     
     my $ref_file='';
     my %ref_range=();
-    $ref_file = "$ref_dir/$host/$site/health_status_reference_range.csv";
+    $ref_file = "$ref_dir/reference_ranges/$host/$site/health_status_reference_range.csv";
     if (-e $ref_file) {
 	Inputs::read_csv_table($ref_file, \%ref_range);
     }
@@ -416,9 +514,6 @@ sub create_AMR_gene_tables{
     my $sample_id = shift;
     my $input_dir = shift;
     my $tmp_dir = shift;
-    my $AMR_gene_info_table = shift;
-    my %AMR_gene_info;
-    my ($all_genes, $header1) = Inputs::read_tsv_table($AMR_gene_info_table, \%AMR_gene_info);
     my $input_file = "$input_dir/$sample_id/all.amr.tsv";
     my $output_file = "$tmp_dir/$sample_id/all.amr.tsv";
     my %AMR_genes;
@@ -427,28 +522,16 @@ sub create_AMR_gene_tables{
     }
     
     my ($genes, $header2) = Inputs::read_tsv_table($input_file, \%AMR_genes);
-    my @genes = sort {$AMR_genes{$a}{'Resistance_Against'} cmp $AMR_genes{$b}{'Resistance_Against'}} keys(%AMR_genes);
+    my @genes = sort {$AMR_genes{$a}{'drug_class'} cmp $AMR_genes{$b}{'drug_class'}} keys(%AMR_genes);
     my @rows;
-    my $max_genes_to_show=60;
+    #my $max_genes_to_show=200;
     my $num=1;
     foreach my $i (@genes){
-	my @id = split(/\./, $i);
-	my $gene_name = join(" ", @id);
-	my $gene_id = pop(@id);
-	my $gene_full_name;
-	my $drug_class;
-	if (exists($AMR_gene_info{$gene_id})) {
-	    $gene_full_name = $AMR_gene_info{$gene_id}{'Name'};
-	    $drug_class = $AMR_gene_info{$gene_id}{'Drug Class'};
-	}else{
-	    next;
-	}
-	
-	
-	my $function = $AMR_gene_info{$gene_id}{'Function'};
-	my $read_counts = $AMR_genes{$i}{'Copy_Number_Estimation'};
-	my $mutation = $AMR_genes{$i}{'Mutation'};
-	my $assign_to = $AMR_genes{$i}{'Assign_to'};
+	my $function = $AMR_genes{$i}{'description'};
+	my $read_counts = $AMR_genes{$i}{'mapped_reads'};
+	my $drug_class = $AMR_genes{$i}{'drug_class'};
+	my $mutation = $AMR_genes{$i}{'mutation'};
+	my $assign_to = $AMR_genes{$i}{'assign_to'};
 	if ($assign_to eq 'Staphylococcus delphini-intermedius-pseudintermedius') {
 	    $assign_to = 'Staphylococcus pseudintermedius';
 	}
@@ -456,16 +539,13 @@ sub create_AMR_gene_tables{
 	if ($mutation ne 'NA') {
 	    $mutation = 'mutated';
 	    $function.= " (mutated)";
-	    if (length($assign_to)>0) {
-		$gene_full_name = $gene_full_name." ($assign_to)";
-	    }
 	}
 	
-	if ($num>$max_genes_to_show) {
-	    last;
-	}
+	#if ($num>$max_genes_to_show) {
+	 #   last;
+	#}
 	
-	my $row = "$gene_full_name\t$drug_class\t$function\t$mutation\t$read_counts";
+	my $row = "$i\t$drug_class\t$function\t$mutation\t$read_counts";
 	push(@rows, $row);
 	$num++;
     }
@@ -565,8 +645,8 @@ sub search_AID_records{
 }
 
 sub get_AID_url{
-    my $ref_dir = shift;
-    open(my $f1, "<$ref_dir/AID_url.tsv") or die;
+    my $AID_table = shift;
+    open(my $f1, "<$AID_table") or die;
     my %AID_url;
     while (my $line = <$f1>) {
 	chomp $line;

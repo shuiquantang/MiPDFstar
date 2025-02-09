@@ -19,7 +19,7 @@ sub page{
     my $patient_species = lc($patient_info->{'Species'});
     my $sample_type = lc($patient_info->{'Sample Type'});
     # print page 3 header
-    my $bac_abun_file = "$input_dir/3.bac_table.tsv";
+    my $bac_abun_file = "$input_dir/3.prok_table.tsv";
     $page_header = ReportFunctions::get_header($page_no, $patient_info, $midog_logo, $tot_pages);
     print($f1 "$page_header\n");
     
@@ -35,7 +35,7 @@ EOF
 	print($f1 "$AMR_gene_table_intro\n");
 	ReportFunctions::create_amr_gene_table($f1, $amr_gene_file);
     }else{
-	print($f1 "<h4>No Antimicrobial Resistance Genes Detected!</h4>\n");
+	print($f1 "<h4>No antimicrobial resistance genes detected!</h4>\n");
     }
     if ($sample_id =~ /^MiV[0-9]+/) {
         print($f1 "<h3 style=\"float:left;\">Abundance Table Download Link</h3>\n");

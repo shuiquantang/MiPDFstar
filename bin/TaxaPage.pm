@@ -32,16 +32,16 @@ sub page{
    
     my $host = $patient_info->{'host'};
     my $site = $patient_info->{'site'};
-    my $fungi_healthy_img ="$script_dir/reference_data/$host/$site/fungi_healthy.svg";
-    my $bac_healthy_img="$script_dir/reference_data/$host/$site/bac_healthy.svg";;
+    my $fungi_healthy_img ="$script_dir/reference_data/reference_ranges/$host/$site/fungi_healthy.svg";
+    my $bac_healthy_img="$script_dir/reference_data/reference_ranges/$host/$site/bac_healthy.svg";;
     
     # print bacteria composition image
-    print($f1 "<h3 style=\"float:left;\">Total Bacteria Composition</h3>\n");
-    my $bacteria_img = "$input_dir/2.bac_abun_2.png";
+    print($f1 "<h3 style=\"float:left;\">Total Bacteria & Archaea Composition</h3>\n");
+    my $bacteria_img = "$input_dir/2.prok_abun_2.png";
     if (-e $bacteria_img) {
 	my $tot_bacteria_intro =<<EOF;	
 <p>
-Charts below depict the relative abundance of all detected bacterial species. Each color represents a different bacterial species. The
+Charts below depict the relative abundance of all detected bacterial/archaeal species. Each color represents a different species. The
 larger the colored segment is, the more abundant that species is in the specimen.
 </p>
 EOF
@@ -52,8 +52,8 @@ EOF
 	    $bacteria_overview_img= <<EOF;
 <table class="overview">
     <tr>
-	<td class="overview"><img src="$bacteria_img" alt="No bacteria detected!" class="donut"></td>
-	<td class="overview"><img src="$bac_healthy_img" alt="No bacteria reference data!" class="donut"></td>
+	<td class="overview"><img src="$bacteria_img" alt="No bacteria or archaea detected!" class="donut"></td>
+	<td class="overview"><img src="$bac_healthy_img" alt="No bacteria or archaea reference data!" class="donut"></td>
     </tr>
 </table>
 EOF
@@ -61,7 +61,7 @@ EOF
 	    $bacteria_overview_img= <<EOF;
 <table class="overview">
     <tr>
-	<td class="overview"><img src="$bacteria_img" alt="No bacteria detected!" class="donut"></td>
+	<td class="overview"><img src="$bacteria_img" alt="No bacteria or archaea detected!" class="donut"></td>
     </tr>
 </table>
 EOF
@@ -72,28 +72,28 @@ EOF
     
     
     # print bacteria abundance table
-    my $bac_abun_file = "$input_dir/3.bac_table.tsv";
+    my $bac_abun_file = "$input_dir/3.prok_table.tsv";
     my $bac_table_intro =<<EOF;	
 <p>
-The table below lists top 8 bacterial species detected within the limit of detection. The absolute and relative abundances of each species is shown. Potential clinically relevant microbes are highlighted in red.
+The table below lists top 8 bacterial/archaeal species detected within the limit of detection. The absolute and relative abundances of each species is shown. Potential clinically relevant microbes are highlighted in red.
 </p>
 EOF
     if (-e $bac_abun_file) {
 	print($f1 "$bac_table_intro\n");
 	ReportFunctions::create_abun_table($f1, $bac_abun_file, $pathogen_ref_info, $ref_list);
     }else{
-	print($f1 "<h4>No Bacteria Detected!</h4>\n");
+	print($f1 "<h4>No bacteria or archaea detected!</h4>\n");
     }
     
     
     # print fungi images
     print($f1 "<p class=\"blank\">&nbsp</p>\n");
-    print($f1 "<h3 style=\"float:left;\">Total Fungal Composition</h3>\n");
-    my $fungi_img = "$input_dir/3.fungi_abun_2.png";
+    print($f1 "<h3 style=\"float:left;\">Total Eukaryota Composition</h3>\n");
+    my $fungi_img = "$input_dir/3.euk_abun_2.png";
     if (-e $fungi_img) {
 	my $tot_fungi_intro =<<EOF;
 <p>
-Charts below depict the relative abundance of all detected fungal species. Each color represents a different fungal species. The
+Charts below depict the relative abundance of all detected eukaryotic species. Each color represents a different species. The
 larger the colored segment is, the more abundant that species is in the specimen.
 </p>
 EOF
@@ -104,8 +104,8 @@ EOF
 	    $fungi_overview_img= <<EOF;
 <table class="overview">
     <tr>
-	<td class="overview"><img src="$fungi_img" alt="No fungi detected!" class="donut"></td>
-	<td class="overview"><img src="$fungi_healthy_img" alt="No fungi reference data!" class="donut"></td>
+	<td class="overview"><img src="$fungi_img" alt="No eukaryotes detected!" class="donut"></td>
+	<td class="overview"><img src="$fungi_healthy_img" alt="No eukaryotic reference data!" class="donut"></td>
     </tr>
 </table>
 EOF
@@ -113,7 +113,7 @@ EOF
 	    $fungi_overview_img= <<EOF;
 <table class="overview">
     <tr>
-	<td class="overview"><img src="$fungi_img" alt="No fungi detected!" class="donut"></td>
+	<td class="overview"><img src="$fungi_img" alt="No eukaryotes detected!" class="donut"></td>
     </tr>
 </table>
 EOF
@@ -123,17 +123,17 @@ EOF
     }
     
     # print fungi table
-    my $fungi_abun_file = "$input_dir/4.fungi_table.tsv";
+    my $fungi_abun_file = "$input_dir/4.euk_table.tsv";
     my $fungi_table_intro =<<EOF;	
 <p>
-The table below lists top 8 fungal species detected within the limit of detection. The absolute and relative abundances of each species is shown. Potential clinically relevant microbes are highlighted in red.
+The table below lists top 8 eukaryotic species detected within the limit of detection. The absolute and relative abundances of each species is shown. Potential clinically relevant microbes are highlighted in red.
 </p>
 EOF
     if (-e $fungi_abun_file) {
 	print($f1 "$fungi_table_intro\n");
 	ReportFunctions::create_abun_table($f1, $fungi_abun_file, $pathogen_ref_info, $ref_list);
     }else{
-	print($f1 "<h4>No Fungi Detected!</h4>\n");
+	print($f1 "<h4>No eukaryotes detected!</h4>\n");
     }
     # print abbreviation keys
     if (scalar(keys(%{$ref_range}))>0) {

@@ -143,7 +143,7 @@ EOF
 	print($f1 "$general_patho_intro\n");
     }
     
-    my $bac_patho_file = "$input_dir/1.bac_pathogen_table.tsv";
+    my $bac_patho_file = "$input_dir/1.prok_pathogen_table.tsv";
     print($f1 "<h3>1.Bacteria</h3>\n");
     if (-e $bac_patho_file) {
 	ReportFunctions::create_abun_table($f1, $bac_patho_file, $pathogen_ref_info, $ref_list);
@@ -153,12 +153,12 @@ EOF
     }
     
     
-    my $fungi_patho_file = "$input_dir/2.fungi_pathogen_table.tsv";
-    print($f1 "<h3>2.Fungi</h3>\n");
+    my $fungi_patho_file = "$input_dir/2.euk_pathogen_table.tsv";
+    print($f1 "<h3>2.Eukaryota</h3>\n");
     if (-e $fungi_patho_file) {
 	ReportFunctions::create_abun_table($f1, $fungi_patho_file, $pathogen_ref_info, $ref_list);
     }else{
-	print($f1 "<h4>No Known Fungal Pathogen Detected!</h4>\n");
+	print($f1 "<h4>No Known Eukaryotic Pathogen Detected!</h4>\n");
     }
     
     # if it is the right sample type and there is at least one table present, show the notes
@@ -182,9 +182,9 @@ EOF
 Each color represents a species. The larger the colored segment is, the more abundant the species is.
 </p>
 EOF
-    my $bactera_vs_fungi_img = "$input_dir/1.bac_vs_fungi.png";
-    my $bactera_img = "$input_dir/2.bac_abun.png";
-    my $fungi_img = "$input_dir/3.fungi_abun.png";
+    my $bactera_vs_fungi_img = "$input_dir/1.prok_vs_euk.png";
+    my $bactera_img = "$input_dir/2.prok_abun.png";
+    my $fungi_img = "$input_dir/3.euk_abun.png";
     
     my $no_microbes_detected=<<EOF;
 <h4>No Microbes were Detected</h4>

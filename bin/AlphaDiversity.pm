@@ -17,11 +17,11 @@ sub create_alpha_div_plots{
 	my $bac_output_file = "$tmp_dir/$sample_id/healthy_fecal_bac.txt";
 	system("perl $ref_data_dir/canine/feces/apply_abun_cutoff.pl -i $fecal_bac_ref -o $bac_output_file -t 0.001");
 	
-	my $bac_species_table = "$project_dir/midog.a.Bac16Sv13/taxa_plots/sorted_otu_L7.txt";
-	my $bac_shannon_plot = "$tmp_dir/$sample_id/bac_shannon.png";
+	my $bac_species_table = "$project_dir/report_input_files/$sample_id/1.prok_perc.tsv";
+	my $bac_shannon_plot = "$tmp_dir/$sample_id/prok_shannon.png";
 	system("Rscript $alpha_div_script_dir/bac_shannon.R $bac_species_table $sample_id $bac_output_file $bac_shannon_plot > /dev/null 2>&1");
 	
-	my $bac_richness_plot = "$tmp_dir/$sample_id/bac_richness.png";
+	my $bac_richness_plot = "$tmp_dir/$sample_id/prok_richness.png";
 	system("Rscript $alpha_div_script_dir/bac_richness.R $bac_species_table  $sample_id $bac_output_file $bac_richness_plot > /dev/null 2>&1");
     }
     
@@ -34,12 +34,12 @@ sub create_alpha_div_plots{
 	my $fungi_output_file = "$tmp_dir/$sample_id/healthy_fecal_fungal.txt";
 	system("perl $ref_data_dir/canine/feces/apply_abun_cutoff.pl -i $fecal_fungi_ref -o $fungi_output_file -t 0.001");
 	
-	my $fungi_species_table = "$project_dir/midog.b.FungiITS/taxa_plots/sorted_otu_L7.txt";
+	my $fungi_species_table = "$project_dir/report_input_files/$sample_id/1.euk_perc.tsv";
 	my $fungi_shannon_plot = "$tmp_dir/$sample_id/fungi_shannon.png";
-	system("Rscript $alpha_div_script_dir/fungi_shannon.R $fungi_species_table  $sample_id $fungi_output_file $fungi_shannon_plot > /dev/null 2>&1");
+	system("Rscript $alpha_div_script_dir/euk_shannon.R $fungi_species_table  $sample_id $fungi_output_file $fungi_shannon_plot > /dev/null 2>&1");
 	
 	my $fungi_richness_plot = "$tmp_dir/$sample_id/fungi_richness.png";
-	system("Rscript $alpha_div_script_dir/fungi_richness.R $fungi_species_table  $sample_id $fungi_output_file $fungi_richness_plot > /dev/null 2>&1");
+	system("Rscript $alpha_div_script_dir/euk_richness.R $fungi_species_table  $sample_id $fungi_output_file $fungi_richness_plot > /dev/null 2>&1");
     }
     
     

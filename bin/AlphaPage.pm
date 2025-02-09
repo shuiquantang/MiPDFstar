@@ -33,14 +33,14 @@ indicated by a score below that of the clinical healthy reference range, is a co
 of an unbalanced microbiome and can be an indicator of disease.
 </p>
 EOF
-    my $else_statement = "<p>Bacterial richness score is not available!</p>\n";
-    my $alt = "Bacterial Richness Image";
+    my $else_statement = "<p>Bacterial/archaeal richness score is not available!</p>\n";
+    my $alt = "Bacterial/archaeal Richness Image";
     
-    my $img = "$input_dir/bac_richness.png";
+    my $img = "$input_dir/prok_richness.png";
     print_alpha_div_plot($statement, $else_statement, $alt, $img, $f1);
     
 # print Bacterial evenness table
-    print($f1 "<h2 style=\"float:left;\">Bacterial Evenness Score</h2>\n");
+    print($f1 "<h2 style=\"float:left;\">Bacterial/archaeal Evenness Score</h2>\n");
     $statement =<<EOF;
 <p class="note">
 The Microbial Evenness Score is an extension of the richness score above. The evenness score counts how many different kind of bacteria are found
@@ -49,38 +49,38 @@ distribution is 90:5:5, that score would be lower than a sample has a relative d
 score below that of the clinically healthy reference range, is a common indication of an unbalanced microbiome and can be an indicator of disease.
 </p>
 EOF
-    $else_statement = "<p>Bacterial evenness score is not available!</p>\n";
-    $alt = "Bacterial Evenness Image";
-    $img = "$input_dir/bac_shannon.png";
+    $else_statement = "<p>Bacterial/archaeal evenness score is not available!</p>\n";
+    $alt = "Bacterial/archaeal Evenness Image";
+    $img = "$input_dir/prok_shannon.png";
     
     print_alpha_div_plot($statement, $else_statement, $alt, $img, $f1);
 
     
-# print Bacterial richness table
-    print($f1 "<h2 style=\"float:left;\">Fungal Richness Score</h2>\n");
+# print Eukaryotic richness table
+    print($f1 "<h2 style=\"float:left;\">Eukaryotic Richness Score</h2>\n");
     $statement =<<EOF;
 <p class="note">
-The richness score counts how many different types of fungi are found in the sample.
+The richness score counts how many different types of Eukaryotes are found in the sample.
 </p>
 EOF
-    $else_statement = "<p>Fungal richness score is not available!</p>\n";
-    $alt = "Fungal Richness Image";
+    $else_statement = "<p>Eukaryotic richness score is not available!</p>\n";
+    $alt = "Eukaryotic Richness Image";
     
-    $img = "$input_dir/fungi_richness.png";
+    $img = "$input_dir/euk_richness.png";
     print_alpha_div_plot($statement, $else_statement, $alt, $img, $f1);
     
     
 # print fungal evenness table
-    print($f1 "<h2 style=\"float:left;\">Fungal Evenness Score</h2>\n");
+    print($f1 "<h2 style=\"float:left;\">Eukaryotic Evenness Score</h2>\n");
     $statement =<<EOF;
 <p class="note">
 The evenness score is an extension of the richness score above. The evenness score counts how many different kind of fungi are found in a sample
 (richness score) and how evenly their numbers are distributed.
 </p>
 EOF
-    $else_statement = "<p>Fungal evenness score is not available!</p>\n";
-    $alt = "Fungal Evenness Image";
-    $img = "$input_dir/fungi_shannon.png";
+    $else_statement = "<p>Eukaryotic evenness score is not available!</p>\n";
+    $alt = "Eukaryotic Evenness Image";
+    $img = "$input_dir/euk_shannon.png";
     
     print_alpha_div_plot($statement, $else_statement, $alt, $img, $f1);
     
