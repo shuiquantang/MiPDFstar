@@ -75,6 +75,9 @@ img<-ggplot(alpha_div, aes(x=' ', y=alpha_div))+
         panel.grid.minor = element_blank(), panel.background = element_blank(), plot.margin=margin(0,0.8,0, 0, "cm"),  axis.line.x = element_line(color='black')) + 
    geom_vline(xintercept=c(1,2.5))
 
+# Save the alpha diversity value to a file
+output_alpha_file <- args[5]
+write.table(samp_alpha, file = output_alpha_file, row.names = FALSE, col.names = FALSE, quote = FALSE)
 
 #writeLines(note, './FalphaS.txt')
 ggsave(args[4], width = 30, height = 6, unit = "cm")

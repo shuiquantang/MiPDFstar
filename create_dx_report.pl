@@ -12,6 +12,7 @@ use ReportHTML;
 use AlphaDiversity;
 use File::Spec::Functions;
 use File::Basename;
+use Excel::Writer::XLSX;
 use File::Path qw(remove_tree);
 use Parallel::Loops;
 use Cwd 'abs_path';
@@ -74,16 +75,16 @@ my $cpu = `nproc`;
 chomp $cpu;
 my $pl = Parallel::Loops->new($cpu);
 $pl -> share( \@all_info );
-$pl -> foreach (\@samples, sub{
-      my $i = $_;
-#foreach my $i (sort(@samples)){
+#$pl -> foreach (\@samples, sub{
+#      my $i = $_;
+foreach my $i (sort(@samples)){
       # read pathgen information, including species info, sample type info
       my ($patient_info, $coln_names) = Inputs::extract_patient_info($i, $input_dir);
       #skip the samples (e.g. controls) if it has no patient information
       if ($skip_samples_without_patient_info == 1) {
             if (scalar(keys(%{$patient_info}))==0) {remove_tree("$output_dir/$i"); remove_tree("$tmp_dir/$i");
-                  return;
-                  #next;
+                  #return;
+                  next;
             }
       }
       # read pre-defined reference range based on sample type
@@ -104,7 +105,7 @@ $pl -> foreach (\@samples, sub{
       my $bac_amr_table = '6.AMR.table.all.microbes.tsv';
       BuildingBlock::create_AMR_tables($i, $input_dir, $tmp_dir, $AMR_reference_table, $eucast_intrinsic_resistance_file, $bac_pathogen_abun, $amr_genes, $bac_pathogen_amr_table, $bac_amr_table, $bac_abun_table);
       # build AMR table for the detected fungi
-      my $fungi_abun_table = '2.fungi_cells.tsv';
+      my $fungi_abun_table = '2.euk_cells.tsv';
       my $fungi_pathogen_amr_table = '5a.fungi.AMR.table.tsv';
       my $fungi_amr_table = '6a.fungi.AMR.table.all.microbes.tsv';
       BuildingBlock::create_AMR_tables($i, $input_dir, $tmp_dir, $AMR_reference_table_fungi, $eucast_intrinsic_resistance_file, $fungi_pathogen_abun, $fungi_pathogen_amr_table, $fungi_amr_table, $fungi_abun_table);
@@ -123,13 +124,82 @@ $pl -> foreach (\@samples, sub{
       $patient_info->{'tables_link'}=$table_link;
       push(@{$coln_names}, 'tables_link');
       write_info($tmp_dir, $i, $patient_info, $coln_names);
-      system("zip -j $output_dir/$i/$random_str/$zip_tables $tmp_dir/$i/*.tsv");
-#}
-});
+      system("cp $input_dir/$i/1.prok_perc.tsv $tmp_dir/$i/1.prok_perc.tsv");
+      system("cp $input_dir/$i/1.prok_cells.tsv $tmp_dir/$i/1.prok_cells.tsv");
+      system("cp $input_dir/$i/2.euk_perc.tsv $tmp_dir/$i/2.euk_perc.tsv");
+      system("cp $input_dir/$i/2.euk_cells.tsv $tmp_dir/$i/2.euk_cells.tsv");
+      convert_csv_tsv_to_xlsx("$tmp_dir/$i");
+      system("zip -j $output_dir/$i/$random_str/$zip_tables $tmp_dir/$i/*.xlsx");
+}
+#});
 
 #create summary file including report links for report QC
 my $summary_file = "$project_id\\_star_report_summary_$tag.tsv";
 ReportHTML::compile_patient_info($tmp_dir, \@samples, $summary_file);
+
+sub convert_csv_tsv_to_xlsx{
+      my $dir = shift;
+      my $prok_cell_table = '1.prok_cells.tsv';
+      my $prok_cell_xlsx = '1_prok_cells.xlsx';
+      convert_to_excel("$dir/$prok_cell_table", "$dir/$prok_cell_xlsx", '\t');
+      
+      my $prok_perc_table = '1.prok_perc.tsv';
+      my $prok_perc_xlsx = '2_prok_perc.xlsx';
+      convert_to_excel("$dir/$prok_perc_table", "$dir/$prok_perc_xlsx", '\t');
+      
+      my $euk_cell_table = '2.euk_cells.tsv';
+      my $euk_cell_xlsx = '3_euk_cells.xlsx';
+      convert_to_excel("$dir/$euk_cell_table", "$dir/$euk_cell_xlsx", '\t');
+      
+      my $euk_perc_table = '2.euk_perc.tsv';
+      my $euk_perc_xlsx = '4_euk_perc.xlsx';
+      convert_to_excel("$dir/$euk_perc_table", "$dir/$euk_perc_xlsx", '\t');
+      
+      my $AMR_table = '5.AMR.table.tsv';
+      my $AMR_xlsx = '5_AMR_table.xlsx';
+      convert_to_excel("$dir/$AMR_table", "$dir/$AMR_xlsx", '\t');
+      
+      my $AMR_gene_table = 'all.amr.tsv';
+      my $AMR_gene_xlsx = '6_AMR_genes_detected.xlsx';
+      convert_to_excel("$dir/$AMR_gene_table", "$dir/$AMR_gene_xlsx", '\t');
+      
+      my $alpha_div_table = 'alpha_div.tsv';
+      my $alph_div_xlsx = '7_Alpha_Diversity.xlsx';
+      convert_to_excel("$dir/$alpha_div_table", "$dir/$alph_div_xlsx", '\t');
+}
+
+sub convert_to_excel {
+    my ($input_file, $output_file, $delimiter) = @_;
+
+    # Ensure proper file extension
+    $output_file ||= 'output.xlsx';
+
+    # Detect delimiter (default: comma for CSV, tab for TSV)
+    $delimiter ||= ($input_file =~ /\.tsv$/i) ? "\t" : ",";
+
+    # Open input file
+    open(my $fh, '<', $input_file) or return();
+
+    # Create a new Excel workbook
+    my $workbook  = Excel::Writer::XLSX->new($output_file);
+    my $worksheet = $workbook->add_worksheet();
+
+    my $row = 0;
+    while (my $line = <$fh>) {
+        chomp $line;
+        my @fields = split /$delimiter/, $line;  # Split using detected delimiter
+
+        for my $col (0 .. $#fields) {
+            $worksheet->write($row, $col, $fields[$col]);  # Write to Excel
+        }
+        $row++;
+    }
+
+    close $fh;
+    $workbook->close();
+
+    #print "Conversion completed: $output_file\n";
+}
 
 sub write_info{
       my $tmp_dir=shift;
