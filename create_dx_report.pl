@@ -75,9 +75,9 @@ my $cpu = `nproc`;
 chomp $cpu;
 my $pl = Parallel::Loops->new($cpu);
 $pl -> share( \@all_info );
-#$pl -> foreach (\@samples, sub{
-#      my $i = $_;
-foreach my $i (sort(@samples)){
+$pl -> foreach (\@samples, sub{
+      my $i = $_;
+#foreach my $i (sort(@samples)){
       # read pathgen information, including species info, sample type info
       my ($patient_info, $coln_names) = Inputs::extract_patient_info($i, $input_dir);
       #skip the samples (e.g. controls) if it has no patient information
@@ -140,8 +140,8 @@ foreach my $i (sort(@samples)){
       system("cp $input_dir/$i/virus_abun.tsv $tmp_dir/$i/10.all.virus.tsv");
       convert_csv_tsv_to_xlsx("$tmp_dir/$i");
       zip_tables($i, $tmp_dir, $output_dir, $zip_tables, $random_str);
-}
-#});
+#}
+});
 
 #create summary file including report links for report QC
 my $summary_file = "$project_id\\_star_report_summary_$tag.tsv";
