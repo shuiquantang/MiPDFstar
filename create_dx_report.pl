@@ -102,13 +102,22 @@ foreach my $i (sort(@samples)){
       
       my $bac_abun_table = '1.prok_cells.tsv';
       my $bac_pathogen_amr_table = '5.AMR.table.tsv';
-      my $bac_amr_table = '6.AMR.table.all.microbes.tsv';
+      my $bac_amr_table = '5a.AMR.table.all.microbes.tsv';
       BuildingBlock::create_AMR_tables($i, $input_dir, $tmp_dir, $AMR_reference_table, $eucast_intrinsic_resistance_file, $bac_pathogen_abun, $amr_genes, $bac_pathogen_amr_table, $bac_amr_table, $bac_abun_table);
+      my $bac_pathogen_amr_table_mask= '5b.AMR.table.tsv';
+      BuildingBlock::mask_AMR_table($i, $tmp_dir, $bac_pathogen_amr_table, $bac_pathogen_amr_table_mask);
+      my $bac_amr_table_mask = '5c.AMR.table.all.microbes.tsv';
+      BuildingBlock::mask_AMR_table($i, $tmp_dir, $bac_amr_table, $bac_amr_table_mask);
       # build AMR table for the detected fungi
       my $fungi_abun_table = '2.euk_cells.tsv';
-      my $fungi_pathogen_amr_table = '5a.fungi.AMR.table.tsv';
+      my $fungi_pathogen_amr_table = '6.fungi.AMR.table.tsv';
       my $fungi_amr_table = '6a.fungi.AMR.table.all.microbes.tsv';
-      BuildingBlock::create_AMR_tables($i, $input_dir, $tmp_dir, $AMR_reference_table_fungi, $eucast_intrinsic_resistance_file, $fungi_pathogen_abun, $fungi_pathogen_amr_table, $fungi_amr_table, $fungi_abun_table);
+      BuildingBlock::create_AMR_tables($i, $input_dir, $tmp_dir, $AMR_reference_table_fungi, $eucast_intrinsic_resistance_file, $fungi_pathogen_abun, '', $fungi_pathogen_amr_table, $fungi_amr_table, $fungi_abun_table);
+      my $fungi_pathogen_amr_table_mask= '6b.fungi.AMR.table.tsv';
+      BuildingBlock::mask_AMR_table($i, $tmp_dir, $fungi_pathogen_amr_table, $fungi_pathogen_amr_table_mask);
+      my $fungi_amr_table_mask = '6c.fungi.AMR.table.all.microbes.tsv';
+      BuildingBlock::mask_AMR_table($i, $tmp_dir, $fungi_amr_table, $fungi_amr_table_mask);
+      
       # Alpha diversity analysis
       if ($i =~ /^MiV[0-9]+/) {
             if (BuildingBlock::canine_feces_only($patient_info)) {
@@ -124,12 +133,13 @@ foreach my $i (sort(@samples)){
       $patient_info->{'tables_link'}=$table_link;
       push(@{$coln_names}, 'tables_link');
       write_info($tmp_dir, $i, $patient_info, $coln_names);
-      system("cp $input_dir/$i/1.prok_perc.tsv $tmp_dir/$i/1.prok_perc.tsv");
-      system("cp $input_dir/$i/1.prok_cells.tsv $tmp_dir/$i/1.prok_cells.tsv");
-      system("cp $input_dir/$i/2.euk_perc.tsv $tmp_dir/$i/2.euk_perc.tsv");
-      system("cp $input_dir/$i/2.euk_cells.tsv $tmp_dir/$i/2.euk_cells.tsv");
+      system("cp $input_dir/$i/1.prok_perc.tsv $tmp_dir/$i/8a.all.prok.perc.tsv");
+      system("cp $input_dir/$i/1.prok_cells.tsv $tmp_dir/$i/8b.all.prok.cells.tsv");
+      system("cp $input_dir/$i/2.euk_perc.tsv $tmp_dir/$i/9a.all.euk.perc.tsv");
+      system("cp $input_dir/$i/2.euk_cells.tsv $tmp_dir/$i/9b.all.euk.cells.tsv");
+      system("cp $input_dir/$i/virus_abun.tsv $tmp_dir/$i/10.all.virus.tsv");
       convert_csv_tsv_to_xlsx("$tmp_dir/$i");
-      system("zip -j $output_dir/$i/$random_str/$zip_tables $tmp_dir/$i/*.xlsx");
+      zip_tables($i, $tmp_dir, $output_dir, $zip_tables, $random_str);
 }
 #});
 
@@ -137,35 +147,56 @@ foreach my $i (sort(@samples)){
 my $summary_file = "$project_id\\_star_report_summary_$tag.tsv";
 ReportHTML::compile_patient_info($tmp_dir, \@samples, $summary_file);
 
+
+sub zip_tables{
+      my $sample_id = shift;
+      my $tmp_dir = shift;
+      my $output_dir = shift;
+      my $zip_file = shift;
+      my $random_str = shift;
+      my @tables = qw(1.prok_pathogen_table.tsv 2.euk_pathogen_table.tsv 3.prok_table.tsv 4.euk_table.tsv
+      5b.AMR.table.tsv 5c.AMR.table.all.microbes.tsv 5d.all.amr.genes.tsv
+      6b.fungi.AMR.table.tsv 6c.fungi.AMR.table.all.microbes.tsv 7.virus_pathogen_table.tsv 7a.virus_table.tsv
+      8a.all.prok.perc.tsv 8b.all.prok.cells.tsv 9a.all.euk.perc.tsv 9b.all.euk.cells.tsv 10.all.virus.tsv);
+      my @existing_tables;
+      foreach my $i (@tables){
+            if (-e "$tmp_dir/$sample_id/$i") {
+                  push(@existing_tables, "$tmp_dir/$sample_id/$i");
+            }
+      }
+      my $file_str = join(" ", @existing_tables);
+      system("zip -j $output_dir/$sample_id/$random_str/$zip_file $file_str");
+}
 sub convert_csv_tsv_to_xlsx{
       my $dir = shift;
       my $prok_cell_table = '1.prok_cells.tsv';
       my $prok_cell_xlsx = '1_prok_cells.xlsx';
-      convert_to_excel("$dir/$prok_cell_table", "$dir/$prok_cell_xlsx", '\t');
+      #convert_to_excel("$dir/$prok_cell_table", "$dir/$prok_cell_xlsx", '\t');
       
       my $prok_perc_table = '1.prok_perc.tsv';
       my $prok_perc_xlsx = '2_prok_perc.xlsx';
-      convert_to_excel("$dir/$prok_perc_table", "$dir/$prok_perc_xlsx", '\t');
+      #convert_to_excel("$dir/$prok_perc_table", "$dir/$prok_perc_xlsx", '\t');
       
       my $euk_cell_table = '2.euk_cells.tsv';
       my $euk_cell_xlsx = '3_euk_cells.xlsx';
-      convert_to_excel("$dir/$euk_cell_table", "$dir/$euk_cell_xlsx", '\t');
+      #convert_to_excel("$dir/$euk_cell_table", "$dir/$euk_cell_xlsx", '\t');
       
       my $euk_perc_table = '2.euk_perc.tsv';
       my $euk_perc_xlsx = '4_euk_perc.xlsx';
-      convert_to_excel("$dir/$euk_perc_table", "$dir/$euk_perc_xlsx", '\t');
+      #convert_to_excel("$dir/$euk_perc_table", "$dir/$euk_perc_xlsx", '\t');
       
       my $AMR_table = '5.AMR.table.tsv';
       my $AMR_xlsx = '5_AMR_table.xlsx';
-      convert_to_excel("$dir/$AMR_table", "$dir/$AMR_xlsx", '\t');
+      #convert_to_excel("$dir/$AMR_table", "$dir/$AMR_xlsx", '\t');
       
       my $AMR_gene_table = 'all.amr.tsv';
-      my $AMR_gene_xlsx = '6_AMR_genes_detected.xlsx';
-      convert_to_excel("$dir/$AMR_gene_table", "$dir/$AMR_gene_xlsx", '\t');
+      #my $AMR_gene_xlsx = '6_AMR_genes_detected.xlsx';
+      #convert_to_excel("$dir/$AMR_gene_table", "$dir/$AMR_gene_xlsx", '\t');
       
       my $alpha_div_table = 'alpha_div.tsv';
-      my $alph_div_xlsx = '7_Alpha_Diversity.xlsx';
-      convert_to_excel("$dir/$alpha_div_table", "$dir/$alph_div_xlsx", '\t');
+      my $alph_div_tsv = '9_Alpha_Diversity.tsv';
+      #convert_to_excel("$dir/$alpha_div_table", "$dir/$alph_div_xlsx", '\t');
+      system("mv $dir/$alpha_div_table $dir/$alph_div_tsv");
 }
 
 sub convert_to_excel {

@@ -110,28 +110,18 @@ EOF
 # print Bacteria pathogen table
     print($f1 "<h2 style=\"float:left;\">Potential Clinically Relevant Microbes Detected:</h2>\n");
     my $canine_health_range_intro = <<EOF;
-<p class='text'>Listed are those bacteria and fungi detected in the specimen that are of potential clinical relevance.
-Results from this report should be considered together with clinical data gathered by the veterinarian (physical examination, medical history, cytology, etc.)
-as the microbes detected may or may not be the cause of the clinical condition. For a comprehensive list of all microorganisms detected in this specimen see page 3 of this report.
-The purpose of Significance is to highlight those species that are outside the expected range for the average clinically healthy animals.
-Please consider that even commensals can become pathogenic in certain patients under certain circumstances.
-Further, novel or extremely rare pathogens may be found on page 3 for your consideration and clinical diagnosis.
+<p class='text'>Top 5 potential Bacterial and Eukaryotic pathogens are listed. The comprehensive list of all microbes are shown in page 3.
+"Significance" column indicates the difference of the species' abundance from "Normal Range", i.e. its abundance in clinical healthy animals.
+Less than 1000 cells of Bacteria or less than 10 cells of Fungi are often not clinically significant.
 </p>
 EOF
 
     my $general_patho_intro = <<EOF;
-<p class='text'>Listed are those bacteria and fungi detected in the specimen that are of potential clinical relevance.
-Results from this report should be considered together with additional clinical data gathered by the veterinarian (physical examination, medical history, cytology, etc.) 
-as the microbes detected may or may not be the cause of the clinical condition. For a comprehensive list of all microorganisms detected in this specimen see page 3 of this report.
-Please consider that even commensals can become pathogenic in certain patients under certain circumstances.
-Further, novel or extremely rare pathogens may be found on page 3 for your consideration and clinical diagnosis.
+<p class='text'>Top 5 potential Bacterial and Eukaryotic pathogens are listed. The comprehensive list of all microbes are shown in page 3.
+Less than 1000 cells of Bacteria or less than 10 cells of Fungi are often not clinically significant.
 </p>
 EOF
     my $patho_table_notes = <<EOF;
-<p class=text'>
-The number of cells per sample is subject to variations based on sampling technique applied to collect the sample. Following the sampling protocol closely is highly recommended.
-Less than 1000 cells of Bacteria or less than 10 cells of Fungi are often not clinically relevant unless poor sampling technique was applied, or lower sample volume was submitted.
-</p>
 <p class=text'>
 * AID stands for Animal Infection Database. It is a resource center to provide more information for microbes in animal microbiome settings.
 </p>
@@ -142,7 +132,7 @@ EOF
     }else{
 	print($f1 "$general_patho_intro\n");
     }
-    
+    # Bacteria pathogen table
     my $bac_patho_file = "$input_dir/1.prok_pathogen_table.tsv";
     print($f1 "<h3>1.Bacteria</h3>\n");
     if (-e $bac_patho_file) {
@@ -152,13 +142,22 @@ EOF
 	print($f1 "<h4>No Known Bacterial Pathogen Detected!</h4>\n");
     }
     
-    
+    # fungal pathogen table
     my $fungi_patho_file = "$input_dir/2.euk_pathogen_table.tsv";
     print($f1 "<h3>2.Eukaryota</h3>\n");
     if (-e $fungi_patho_file) {
 	ReportFunctions::create_abun_table($f1, $fungi_patho_file, $pathogen_ref_info, $ref_list);
     }else{
 	print($f1 "<h4>No Known Eukaryotic Pathogen Detected!</h4>\n");
+    }
+    
+    # virus pathogen table
+    my $virus_patho_file = "$input_dir/7.virus_pathogen_table.tsv";
+    print($f1 "<h3>3.Viruses</h3>\n");
+    if (-e $virus_patho_file) {
+	ReportFunctions::create_abun_table($f1, $virus_patho_file, $pathogen_ref_info, $ref_list);
+    }else{
+	print($f1 "<h4>No Known Virus Pathogen Detected!</h4>\n");
     }
     
     # if it is the right sample type and there is at least one table present, show the notes
@@ -176,9 +175,9 @@ EOF
     print($f1 "<h2>Microbial Overview:</h2>\n");
     my $microbial_overview_text = <<EOF;
 <p class='note'>
-<b>Bacteria vs Fungi</b>: the relative abundance between Bacteria and Fungi.
-<b>Bacteria</b>: the percentage profile of bacterial species alone.
-<b>Fungi</b>: the percentage profile of fungi species alone.
+<b>Domain Composition</b>: the relative abundance between Bacteria, Archaea and Eukaryota.
+<b>Bacteria & Archaea</b>: the percentage profile of Bacteria and Archaea species alone.
+<b>Eukaryota</b>: the percentage profile of Eukaryota species alone.
 Each color represents a species. The larger the colored segment is, the more abundant the species is.
 </p>
 EOF
@@ -188,7 +187,7 @@ EOF
     
     my $no_microbes_detected=<<EOF;
 <h4>No Microbes were Detected</h4>
-<p class="endnote">Please Note: It is common to see no microbial load in healthy urine samples. For more information see the Methods Section under: 'When no Bacterial or Fungal Species are Detected'.</p>
+<p class="endnote">Please Note: It is common to see no microbial load in healthy urine samples. For more information see the Methods Section under: 'When no Microbial Species are Detected'.</p>
 EOF
     my @figs = ($bactera_vs_fungi_img, $bactera_img, $fungi_img);
     my $microbial_overview_img="";
@@ -198,14 +197,14 @@ EOF
 	print($f1 "<tr>\n");
 	print($f1 "<td class=\"overview\"><img src=\"$bactera_vs_fungi_img\" alt=\"No microbes detected!\" class=\"donut\"></td>");
 	   if (-e $bactera_img) {
-	    print($f1 "<td class=\"overview\"><img src=\"$bactera_img\" alt=\"No bacteria detected!\" class=\"donut\"></td>");
+	    print($f1 "<td class=\"overview\"><img src=\"$bactera_img\" alt=\"No bacteria or archaea detected!\" class=\"donut\"></td>");
 	}else{
-	    print($f1 "<td class=\"overview\">No bacteria detected!</td>");
+	    print($f1 "<td class=\"overview\">No bacteria or archaea detected!</td>");
 	}
 	if (-e $fungi_img) {
-	    print($f1 "<td class=\"overview\"><img src=\"$fungi_img\" alt=\"No fungi detected!\" class=\"donut\"></td>");
+	    print($f1 "<td class=\"overview\"><img src=\"$fungi_img\" alt=\"No eukaryota detected!\" class=\"donut\"></td>");
 	}else{
-	    print($f1 "<td class=\"overview\">No fungi detected!</td>");
+	    print($f1 "<td class=\"overview\">No eukaryota detected!</td>");
 	}
 	print($f1 "</table>\n");
 	print($f1 "</tr>\n");

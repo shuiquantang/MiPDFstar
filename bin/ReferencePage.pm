@@ -25,6 +25,21 @@ sub page{
     print($f1 "$page_header\n");
 
 #-----------------------------------------------------------------------------
+    print($f1 "<h2>Virus Composition</h2>\n");
+    my $virus_table_intro = <<EOF;
+<p class='text'>Top 8 DNA viruses detected are listed. Currently, the test can only detect double-stranded DNA viruses.
+</p>
+EOF
+    print($f1 "$virus_table_intro\n");
+    # virus pathogen table
+    my $virus_patho_file = "$input_dir/7a.virus_table.tsv";
+    if (-e $virus_patho_file) {
+	ReportFunctions::create_abun_table($f1, $virus_patho_file, $pathogen_ref_info, $ref_list);
+    }else{
+	print($f1 "<h4>No Known Virus Pathogen Detected!</h4>\n");
+    }
+
+
 # print references
     print($f1 "<h2>References</h2>\n");
     print($f1 "<div class=\"ref\"><ol>\n");
@@ -42,12 +57,11 @@ The MiDOG<sup>&reg</sup> All-in-One Microbial Test is a targeted, Next-generatio
 signatures unique to the identity and character of a specific microorganism. This test relies on safeguarded preservation and transport of
 collected samples, thorough extraction of DNA from all microbes present in the specimen, select amplification of microbial DNA followed
 by Next-generation DNA sequencing using the latest technologies from Illumina (Illumina, Inc., San Diego, CA). Data handling is done via
-curated microbial databases to accurately align DNA sequences to ensure precise and accurate (species-level) identification of all bacteria
-and fungi present in the specimen.
+curated microbial databases to accurately align DNA sequences to ensure precise and accurate (species-level) identification of all microbes present in the specimen.
 </p>
-<h2>When no Bacterial or Fungal Species are Detected:</h2>
+<h2>When no Microbial Species are Detected:</h2>
 <p>
-When no bacterial or fungal species are detected in this test, this result may be due to a very low microbial load and/or low concentration
+When no Microbial species are detected in this test, this result may be due to a very low microbial load and/or low concentration
 of microbial DNA in the sample provided. In this case, we recommend re-sampling the area of interest and re-submitting specimen for analysis.
 </p>
 EOF
@@ -57,7 +71,7 @@ EOF
 
 <h2>Phylogenetic Rank Abbreviations</h2>
 <p>
-If the detected bacterial or fungal taxon could not be identified down to the genus level, the closest phylogenetic rank identified is provided.
+If the detected microbial taxon could not be identified down to the genus level, the closest phylogenetic rank identified is provided.
 An abbreviation indicating the level of the rank is displayed aside. The meaning of the abbreviations is shown as:(p) Phylum level, (c) Class level,
 (o) Order level, and (f) Family level.
 </p>

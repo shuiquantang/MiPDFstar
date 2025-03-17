@@ -13,7 +13,7 @@ sub create_donut_plots{
     # python donut_plot.py -i inputs/domain.tsv -o domain_plot.svg -t "Bactera vs Fungi"
     my $domain_file = "$input_dir/$sample_id/domain_abun.tsv";
     if (-e $domain_file && -s $domain_file) {
-	system("python3 $donut_plot_script -i $domain_file -o $tmp_dir/$sample_id/1.prok_vs_euk.png -t \"Bacteria vs Eukaryota\" -s 0");
+	system("python3 $donut_plot_script -i $domain_file -o $tmp_dir/$sample_id/1.prok_vs_euk.png -t \"Domain Composition\" -s 0");
     }
     
     my $bac_file = "$input_dir/$sample_id/1.prok_perc.tsv";
@@ -29,6 +29,7 @@ sub create_donut_plots{
     }
     
 }
+#i, $input_dir, $tmp_dir, $AMR_reference_table_fungi, $eucast_intrinsic_resistance_file, $fungi_pathogen_abun, $fungi_pathogen_amr_table, $fungi_amr_table, $fungi_abun_table);
 
 sub create_AMR_tables{
     #$i, $input_dir, $tmp_dir, $AMR_reference_table
@@ -90,6 +91,9 @@ sub merge_print_AMR{
     if (scalar(@{$patho_list})>$maximum_pathogens_to_show) {#
 	my @new = @{$patho_list}[0..$maximum_pathogens_to_show-1];
 	$patho_list = \@new;
+    }
+    if (scalar(@{$patho_list})==0) {
+	return();
     }
     foreach my $i (@{$midog_drug_list}){
 	foreach my $j (@{$patho_list}){
@@ -190,9 +194,9 @@ sub create_abun_tables{
     my %virus_abun;
     my $virus_abun_file = "$input_dir/$sample_id/virus_abun.tsv";
     Inputs::read_tsv_table($virus_abun_file,\%virus_abun);
-    my $virus_pathogen_table ="$tmp_dir/$sample_id/5.virus_pathogen_table.tsv"; #table 4
+    my $virus_pathogen_table ="$tmp_dir/$sample_id/7.virus_pathogen_table.tsv"; #table 4
     build_virus_abun_table($virus_pathogen_table, \%virus_abun, 5, 0, $patient_info, $AID_url, $pathogen_ref_info);
-    my $virus_table ="$tmp_dir/$sample_id/5.virus_table.tsv"; #table 4
+    my $virus_table ="$tmp_dir/$sample_id/7a.virus_table.tsv"; #table 4
     build_virus_abun_table($virus_table, \%virus_abun, 8, 0, $patient_info, $AID_url);
     
     
@@ -201,6 +205,30 @@ sub create_abun_tables{
     my $fungi_pathogen_abun = pathogen_match($rel_fungi, $pathogen_ref_info);
     return ($bac_pathogen_abun, $fungi_pathogen_abun);
     
+}
+
+sub mask_AMR_table{
+    my $sample_id = shift;
+    my $tmp_dir = shift;
+    my $amr_table = shift;
+    my $amr_table_mask = shift;
+    open(my $f1, "<$tmp_dir/$sample_id/$amr_table") or return;
+    open(my $f2, ">$tmp_dir/$sample_id/$amr_table_mask") or die;
+    my $header = <$f1>;
+    print($f2 $header);
+    while (my $line = <$f1>) {
+	chomp $line;
+	my @coln = split(/\t/, $line);
+	for (my $i=4; $i<scalar(@coln); $i++){
+	    if ($coln[$i]!~ /^(G|F|P|NA)$/) {
+		$coln[$i]='NR';
+	    }
+	}
+	my $new_line = join("\t", @coln);
+	print($f2 "$new_line\n");
+    }
+    close $f2;
+    close $f1;
 }
 
 sub build_virus_abun_table{
@@ -228,7 +256,7 @@ sub build_virus_abun_table{
     my $line='';
     
     my $counter = 0;
-    @titles = ('Species Detected', 'AID', 'Percentage (%)', 'read_counts');
+    @titles = ('Species Detected', 'AID', 'DNA Abun.', 'Read Counts');
     $header = join(",", @titles);
     print($f1 "$header\n");
     foreach my $i (@species_order){
@@ -236,7 +264,7 @@ sub build_virus_abun_table{
 	$perc = sprintf("%.2f", $perc);
 	my $read_counts = $virus_abun->{$i}->{'mapped_reads'};
 	my $AID_tag = search_AID_records($AID_url, $i);
-	print($f1 "$i,$AID_tag,$perc,$read_counts\n");
+	print($f1 "$i,$AID_tag,$perc\ %,$read_counts\n");
 	$counter++;
 	if ($counter == $maximum_species_to_show) {
 	    last;
@@ -515,7 +543,7 @@ sub create_AMR_gene_tables{
     my $input_dir = shift;
     my $tmp_dir = shift;
     my $input_file = "$input_dir/$sample_id/all.amr.tsv";
-    my $output_file = "$tmp_dir/$sample_id/all.amr.tsv";
+    my $output_file = "$tmp_dir/$sample_id/5d.all.amr.genes.tsv";
     my %AMR_genes;
     if (! -e $input_file) {
 	return;

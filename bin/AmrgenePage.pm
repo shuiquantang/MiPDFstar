@@ -29,7 +29,7 @@ The table below lists antimicrobial resistance genes that are detected in this s
  Use this table only as an additioanl resource when needed. Inferring antibiomicrobial resistance from the resistance genes detected should be cautious, espeically in a mixed microbial population.
 </p>
 EOF
-    my $amr_gene_file = "$input_dir/all.amr.tsv";
+    my $amr_gene_file = "$input_dir/5d.all.amr.genes.tsv";
     print($f1 "<h3 style=\"float:left;\">Antimicrobial Resistance Genes Detected</h3>\n");
     if ((-e $amr_gene_file) && (-e $bac_abun_file)) {
 	print($f1 "$AMR_gene_table_intro\n");

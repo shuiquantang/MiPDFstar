@@ -58,9 +58,9 @@ sub significance_abbr_key{
     my $significance_abbreviation_keys = <<EOF;
 <h4>Abbreviation Key:</h4>
 <p class=\"note\">
-<b>&nbsp;<span class='greendot'></span>&nbsp; Normal.</b> Species detected within the reference range of clinically healthy animals.<br>
-<b>&nbsp;<span class='greydot'></span>&nbsp; Intermediate.</b> Species detected outside the reference range of clinically healthy animals.<br>
-<b>&nbsp;<span class='reddot'></span>&nbsp; High.</b> Species detected significantly higher than the reference range of clinically healthy animals.<br>
+<b>&nbsp;<span class='greendot'></span>&nbsp; Normal.</b> Within the reference range of clinically healthy animals. 
+<b>&nbsp;<span class='greydot'></span>&nbsp; Intermediate.</b> Outside the reference range of clinically healthy animals.<br>
+<b>&nbsp;<span class='reddot'></span>&nbsp; High.</b> Significantly higher than the reference range of clinically healthy animals.
 </p>
 EOF
     print($f1 "$significance_abbreviation_keys\n");

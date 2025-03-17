@@ -33,7 +33,7 @@ sub create_report{
     open(my $f1, ">$report_HTML_file") or die;
     my $input_dir = "$tmp_dir/$sample_id";
     my @ref_list; # list of reference
-    my $tot_pages = 5;
+    my $tot_pages = 4;
     if ($sample_id =~ /^MiV[0-9]+/) {
         if (BuildingBlock::canine_feces_only($patient_info)) {
 	    $tot_pages ++;
@@ -54,8 +54,8 @@ sub create_report{
 	}
 	
     }
-    AmrgenePage::page($sample_id, $f1, $patient_info, $pathogen_info, $input_dir, $script_dir, $table_link, \@ref_list, $tot_pages, $page_no);
-    $page_no++;
+    #AmrgenePage::page($sample_id, $f1, $patient_info, $pathogen_info, $input_dir, $script_dir, $table_link, \@ref_list, $tot_pages, $page_no);
+    #$page_no++;
     ReferencePage::page($sample_id, $f1, $patient_info, $pathogen_info, $input_dir, $script_dir, \@ref_list, $tot_pages, $page_no);
     close $f1;
     ReportFunctions::html2pdf($report_HTML_file, $report_PDF_file);
