@@ -82,8 +82,8 @@ $pl -> foreach (\@samples, sub{
       #skip the samples (e.g. controls) if it has no patient information
       if ($skip_samples_without_patient_info == 1) {
             if (scalar(keys(%{$patient_info}))==0) {remove_tree("$output_dir/$i"); remove_tree("$tmp_dir/$i");
-                  #return;
-                  next;
+                  return;
+                  #next;
             }
       }
       # read pre-defined reference range based on sample type
