@@ -12,7 +12,6 @@ use ReportHTML;
 use AlphaDiversity;
 use File::Spec::Functions;
 use File::Basename;
-use Excel::Writer::XLSX;
 use File::Path qw(remove_tree);
 use Parallel::Loops;
 use Cwd 'abs_path';
@@ -197,39 +196,6 @@ sub convert_csv_tsv_to_xlsx{
       my $alph_div_tsv = '9_Alpha_Diversity.tsv';
       #convert_to_excel("$dir/$alpha_div_table", "$dir/$alph_div_xlsx", '\t');
       system("mv $dir/$alpha_div_table $dir/$alph_div_tsv");
-}
-
-sub convert_to_excel {
-    my ($input_file, $output_file, $delimiter) = @_;
-
-    # Ensure proper file extension
-    $output_file ||= 'output.xlsx';
-
-    # Detect delimiter (default: comma for CSV, tab for TSV)
-    $delimiter ||= ($input_file =~ /\.tsv$/i) ? "\t" : ",";
-
-    # Open input file
-    open(my $fh, '<', $input_file) or return();
-
-    # Create a new Excel workbook
-    my $workbook  = Excel::Writer::XLSX->new($output_file);
-    my $worksheet = $workbook->add_worksheet();
-
-    my $row = 0;
-    while (my $line = <$fh>) {
-        chomp $line;
-        my @fields = split /$delimiter/, $line;  # Split using detected delimiter
-
-        for my $col (0 .. $#fields) {
-            $worksheet->write($row, $col, $fields[$col]);  # Write to Excel
-        }
-        $row++;
-    }
-
-    close $fh;
-    $workbook->close();
-
-    #print "Conversion completed: $output_file\n";
 }
 
 sub write_info{
